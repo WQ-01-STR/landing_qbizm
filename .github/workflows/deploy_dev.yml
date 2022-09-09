@@ -1,0 +1,25 @@
+# This is a basic workflow to help you get started with Actions
+
+name: deploy_dev
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  deployment:
+    runs-on: ubuntu-latest
+    environment: deploy_dev
+    concurrency: 
+      group: deploy_dev
+      cancel-in-progress: true
+    steps:
+      - name: deploy
+          uses: appleboy/ssh-action@master
+            with:
+               host: ${{ secrets.SERVER_IP }}
+               username: ${{ secrets.USER_NAME }}
+               password: ${{ secrets.USER_PASSWORD }}
+               port: ${{ secrets.PORT }}
+               script: bash deployLanding.sh
